@@ -1,0 +1,18 @@
+{
+  "block.wattz.alternator.mk1": "Alternator",
+  "block.wattz.alternator.mk2": "Alternator Mk 2",
+  "block.wattz.alternator.mk3": "Alternator Mk 3",
+  "block.wattz.alternator.mk4": "Alternator Mk 4",
+  "block.wattz.alternator.mk5": "Alternator Mk 5",
+  "block.wattz.tooltip.speed": "Speed:",
+  "block.wattz.tooltip.satisfaction": "Satisfaction:",
+  "block.wattz.tooltip.energy.output": "Output:",
+  "block.wattz.tooltip.energy.voltage": "Voltage:",
+  "block.wattz.tooltip.energy.current": "Current:",
+  "wattz.ponder.alternator.header" : "Producing electricity using Kinetic Energy.",
+  "wattz.ponder.alternator.text_1" : "The Alternator produces electricity based on how much RPM it is given.",
+  "wattz.ponder.alternator.text_2" : "Higher tiers produce more electricity but generally at a higher voltage.",
+  "wattz.ponder.alternator.text_3" : "Remember to use transformers to either step down or step up the voltages if you plan on using them with lower or higher voltage machinery.",
+  "wattz.ponder.alternator.text_4" : "§cElectricity is not the same as FE."
+
+}

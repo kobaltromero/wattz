@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "wattz:alternator/mk3"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "wattz:alternator/mk3"
+}

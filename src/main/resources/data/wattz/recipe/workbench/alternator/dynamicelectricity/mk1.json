@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dynamicelectricity"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "062"
+  ],
+  "key": {
+    "0": { "item": "electrodynamics:insulation" },
+    "1": { "item": "create:speedometer" },
+    "2": { "tag": "c:ingots/steel" },
+    "3": { "item": "dynamicelectricity:alternator" },
+    "4": { "item": "create:shaft" },
+    "5": { "item": "dynamicelectricity:stator"},
+    "6": { "item": "electrodynamics:multimeter"}
+  },
+  "result": {
+    "id": "wattz:alternator/mk1",
+    "count": 1
+  }
+}

@@ -36,17 +36,17 @@ displayName="${mod_name}" #mandatory
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
-#logoFile="examplemod.png" #optional
+logoFile="wattz.png" #optional
 
 # A text field displayed in the mod UI
-#credits="" #optional
+credits="aurilisdev and skiprocks999 for the Voltaic API used by this mod and its dependencies." #optional
 
 # The authors of the mod, displayed in the mod UI (optional)
-#authors=""
+authors="kobaltromero"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Example mod description.
+Bringing realistic electricity to Create since 2026.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
@@ -84,6 +84,20 @@ Example mod description.
     # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="${minecraft_version_range}"
     ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="voltaic"
+    type="required"
+    versionRange="[1,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="create"
+    type="required"
+    versionRange="[6,)"
+    ordering="AFTER"
     side="BOTH"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
