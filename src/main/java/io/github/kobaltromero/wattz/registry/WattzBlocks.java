@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import io.github.kobaltromero.wattz.Wattz;
 import io.github.kobaltromero.wattz.content.alternator.AlternatorBlock;
-import io.github.kobaltromero.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.AlternatorTier;
 
 public class WattzBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Wattz.MODID);

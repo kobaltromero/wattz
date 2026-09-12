@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 
-import io.github.kobaltromero.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.AlternatorTier;
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

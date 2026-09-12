@@ -1,4 +1,4 @@
-package io.github.kobaltromero.tier;
+package io.github.kobaltromero.wattz.tier;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package io.github.kobaltromero.wattz;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.github.kobaltromero.tier.TierData;
+import io.github.kobaltromero.wattz.tier.TierData;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config {

@@ -15,7 +15,7 @@ import net.createmod.ponder.foundation.PonderIndex;
 
 import io.github.kobaltromero.wattz.content.alternator.AlternatorBlockEntity;
 import io.github.kobaltromero.wattz.content.alternator.AlternatorRenderer;
-import io.github.kobaltromero.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.AlternatorTier;
 import io.github.kobaltromero.wattz.content.alternator.AlternatorVisual;
 import io.github.kobaltromero.wattz.ponder.WattzPonder;
 import io.github.kobaltromero.wattz.registry.WattzBE;

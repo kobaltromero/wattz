@@ -14,7 +14,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import io.github.kobaltromero.wattz.Wattz;
-import io.github.kobaltromero.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.AlternatorTier;
 
 public class WattzItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Wattz.MODID);

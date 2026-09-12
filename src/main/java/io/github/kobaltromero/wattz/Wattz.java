@@ -17,7 +17,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
-import io.github.kobaltromero.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.AlternatorTier;
 import io.github.kobaltromero.wattz.registry.WattzBE;
 import io.github.kobaltromero.wattz.registry.WattzBlocks;
 import io.github.kobaltromero.wattz.registry.WattzItems;

@@ -13,7 +13,7 @@ import voltaic.registers.VoltaicCapabilities;
 
 import io.github.kobaltromero.wattz.Wattz;
 import io.github.kobaltromero.wattz.content.alternator.AlternatorBlockEntity;
-import io.github.kobaltromero.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.AlternatorTier;
 
 public class WattzBE {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
