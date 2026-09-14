@@ -12,7 +12,18 @@
   "wattz.ponder.alternator.header" : "Producing electricity using Kinetic Energy.",
   "wattz.ponder.alternator.text_1" : "The Alternator produces electricity based on how much RPM it is given.",
   "wattz.ponder.alternator.text_2" : "Higher tiers produce more electricity but generally at a higher voltage.",
-  "wattz.ponder.alternator.text_3" : "Remember to use transformers to either step down or step up the voltages if you plan on using them with lower or higher voltage machinery.",
-  "wattz.ponder.alternator.text_4" : "§cElectricity is not the same as FE."
+  "wattz.ponder.alternator.text_3" : "You can further upgrade an alternator by inserting stator upgrades. (1 max)",
+  "wattz.ponder.alternator.text_4" : "Remember to use transformers to either step down or step up the voltages if you plan on using them with lower or higher voltage machinery.",
+  "wattz.ponder.alternator.text_5" : "§cElectricity is not the same as FE.",
+  "wattz.configuration.general" : "General",
+  "wattz.configuration.alternator" : "Alternator",
+  "wattz.configuration.mk1" : "Mk 1",
+  "wattz.configuration.mk2" : "Mk 2",
+  "wattz.configuration.mk3" : "Mk 3",
+  "wattz.configuration.mk4" : "Mk 4",
+  "wattz.configuration.mk5" : "Mk 5",
+  "wattz.configuration.stress_max" : "Maximum Stress Impact",
+  "wattz.configuration.voltage" : "Voltage",
+  "wattz.configuration.amperage_max" : "Maximum Amperage"
 
 }

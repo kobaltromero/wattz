@@ -1,32 +1,42 @@
 package io.github.kobaltromero.wattz.content.alternator;
 
-import java.util.EnumMap;
 import java.util.List;
 
+import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 
-import io.github.kobaltromero.wattz.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.Config;
+import io.github.kobaltromero.wattz.tier.Tier;
+import io.github.kobaltromero.wattz.tier.Tier.Alternator;
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 import voltaic.api.electricity.ICapabilityElectrodynamic;
+import voltaic.common.item.ItemUpgrade;
+import voltaic.common.item.subtype.SubtypeItemUpgrade;
 import voltaic.prefab.utilities.object.TransferPack;
 import voltaic.registers.VoltaicCapabilities;
 
 public class AlternatorBlockEntity extends KineticBlockEntity implements ICapabilityElectrodynamic {
-    private final EnumMap<Direction, BlockCapabilityCache<ICapabilityElectrodynamic, Direction>> cache = new EnumMap<>(Direction.class);
-    private final AlternatorTier tier;
-    private boolean firstTickState = true;
+    private static final String UPGRADE_TAG = "stator";
 
-    public AlternatorBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state, AlternatorTier tier) {
+    private BlockCapabilityCache<ICapabilityElectrodynamic, Direction> outputCache;
+    private final Tier.Alternator tier;
+    private boolean firstTickState = true;
+    private ItemStack upgradeStack = ItemStack.EMPTY;
+
+    public AlternatorBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state, Tier.Alternator tier) {
         super(typeIn, pos, state);
         this.tier = tier;
     }
@@ -71,8 +81,39 @@ public class AlternatorBlockEntity extends KineticBlockEntity implements ICapabi
     }
 
     public TransferPack getProduced() {
-        double amps = tier.getAmperage() * getRpmFraction();
+        double amps = tier.getAmperage() * getAmperageMultiplier() * getRpmFraction();
         return TransferPack.ampsVoltage(amps, getVoltage());
+    }
+
+    public static boolean isStatorUpgrade(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() instanceof ItemUpgrade upgrade && upgrade.subtype == SubtypeItemUpgrade.stator;
+    }
+
+    public boolean hasStatorUpgrade() {
+        return !upgradeStack.isEmpty();
+    }
+
+    public double getAmperageMultiplier() {
+        return hasStatorUpgrade() ? 1.0 + Config.statorBonus() : 1.0;
+    }
+
+    public void insertStatorUpgrade(ItemStack stack) {
+        if (hasStatorUpgrade() || !isStatorUpgrade(stack)) {
+            return;
+        }
+        upgradeStack = stack.split(1);
+        notifyUpdate();
+    }
+
+    public ItemStack removeStatorUpgrade() {
+        ItemStack removed = upgradeStack;
+        upgradeStack = ItemStack.EMPTY;
+        notifyUpdate();
+        return removed;
+    }
+
+    public Direction getOutputDirection() {
+        return getBlockState().getValue(DirectionalKineticBlock.FACING).getOpposite();
     }
 
     public double getRpmFraction() {
@@ -122,7 +163,15 @@ public class AlternatorBlockEntity extends KineticBlockEntity implements ICapabi
 
     @Override
     public float calculateStressApplied() {
-        float impact = (float) (tier.getMaxStress() / 256.0);
+        double maxStress = tier.getMaxStress();
+        double scaledImpact = maxStress / 256.0;
+
+        double speed = Math.abs(getSpeed());
+        if (speed > 0.0) {
+            scaledImpact = Math.min(scaledImpact, maxStress / speed);
+        }
+
+        float impact = (float) scaledImpact;
         this.lastStressApplied = impact;
         return impact;
     }
@@ -144,20 +193,9 @@ public class AlternatorBlockEntity extends KineticBlockEntity implements ICapabi
             if (Math.abs(getSpeed()) > 0.0F && isSpeedRequirementFulfilled()) {
                 double available = getProduced().getJoules();
 
-                for (Direction d : Direction.values()) {
-                    if (available <= 0.0) {
-                        break;
-                    }
-                    ICapabilityElectrodynamic neighbor = cache.get(d).getCapability();
-                    if (neighbor == null || !neighbor.isEnergyReceiver()) {
-                        continue;
-                    }
-
-                    TransferPack result = neighbor.receivePower(TransferPack.joulesVoltage(available, getVoltage()), false);
-
-                    if (neighbor.getVoltage() <= getVoltage() || neighbor.getVoltage() == -1.0) {
-                        available -= result.getJoules();
-                    }
+                ICapabilityElectrodynamic neighbor = outputCache.getCapability();
+                if (neighbor != null && neighbor.isEnergyReceiver()) {
+                    neighbor.receivePower(TransferPack.joulesVoltage(available, getVoltage()), false);
                 }
             }
         }
@@ -167,13 +205,28 @@ public class AlternatorBlockEntity extends KineticBlockEntity implements ICapabi
         updateCache();
     }
 
+    @Override
+    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(tag, registries, clientPacket);
+        if (!upgradeStack.isEmpty()) {
+            tag.put(UPGRADE_TAG, upgradeStack.save(registries));
+        }
+    }
+
+    @Override
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(tag, registries, clientPacket);
+        upgradeStack = tag.contains(UPGRADE_TAG)
+                ? ItemStack.parseOptional(registries, tag.getCompound(UPGRADE_TAG))
+                : ItemStack.EMPTY;
+    }
+
     public void updateCache() {
         if (level != null && !level.isClientSide() && level instanceof ServerLevel serverLevel) {
-            for (Direction side : Direction.values()) {
-                cache.put(side, BlockCapabilityCache.create(
-                        VoltaicCapabilities.CAPABILITY_ELECTRODYNAMIC_BLOCK, serverLevel, getBlockPos().relative(side), side.getOpposite(),
-                        () -> !isRemoved(), () -> {}));
-            }
+            Direction side = getOutputDirection();
+            outputCache = BlockCapabilityCache.create(
+                    VoltaicCapabilities.CAPABILITY_ELECTRODYNAMIC_BLOCK, serverLevel, getBlockPos().relative(side), side.getOpposite(),
+                    () -> !isRemoved(), () -> {});
         }
     }
 

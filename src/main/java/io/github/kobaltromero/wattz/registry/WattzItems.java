@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.kobaltromero.wattz.tier.Tier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -14,7 +15,6 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import io.github.kobaltromero.wattz.Wattz;
-import io.github.kobaltromero.wattz.tier.AlternatorTier;
 
 public class WattzItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Wattz.MODID);
@@ -22,7 +22,7 @@ public class WattzItems {
     private static final Map<String, DeferredItem<BlockItem>> ALTERNATORS = new LinkedHashMap<>();
 
     static {
-        for (AlternatorTier tier : AlternatorTier.ALL) {
+        for (Tier.Alternator tier : Tier.Alternator.ALL) {
             ALTERNATORS.put(tier.id(), ITEMS.register("alternator/" + tier.id(), () -> new BlockItem(WattzBlocks.getAlternator(tier.id()).get(), new Item.Properties()) {
                 @Override
                 public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tooltip, TooltipFlag flag) {

@@ -3,6 +3,7 @@ package io.github.kobaltromero.wattz.registry;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import io.github.kobaltromero.wattz.tier.Tier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -13,7 +14,7 @@ import voltaic.registers.VoltaicCapabilities;
 
 import io.github.kobaltromero.wattz.Wattz;
 import io.github.kobaltromero.wattz.content.alternator.AlternatorBlockEntity;
-import io.github.kobaltromero.wattz.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.Tier.Alternator;
 
 public class WattzBE {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -22,7 +23,7 @@ public class WattzBE {
     private static final Map<String, DeferredHolder<BlockEntityType<?>, BlockEntityType<AlternatorBlockEntity>>> ALTERNATORS = new LinkedHashMap<>();
 
     static {
-        for (AlternatorTier tier : AlternatorTier.ALL) {
+        for (Tier.Alternator tier : Tier.Alternator.ALL) {
             ALTERNATORS.put(tier.id(), BLOCK_ENTITIES.register(tier.registryName(), () -> BlockEntityType.Builder
                     .of((pos, state) -> new AlternatorBlockEntity(getAlternator(tier.id()).get(), pos, state, tier),
                             WattzBlocks.getAlternator(tier.id()).get())
@@ -36,7 +37,8 @@ public class WattzBE {
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         for (DeferredHolder<BlockEntityType<?>, BlockEntityType<AlternatorBlockEntity>> holder : ALTERNATORS.values()) {
-            event.registerBlockEntity(VoltaicCapabilities.CAPABILITY_ELECTRODYNAMIC_BLOCK, holder.get(), (be, side) -> be);
+            event.registerBlockEntity(VoltaicCapabilities.CAPABILITY_ELECTRODYNAMIC_BLOCK, holder.get(),
+                    (be, side) -> side == be.getOutputDirection() ? be : null);
         }
     }
 }

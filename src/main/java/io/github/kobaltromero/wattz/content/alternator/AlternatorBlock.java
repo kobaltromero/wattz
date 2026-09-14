@@ -7,38 +7,48 @@ import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
-import io.github.kobaltromero.wattz.tier.AlternatorTier;
+import io.github.kobaltromero.wattz.tier.Tier;
+import io.github.kobaltromero.wattz.tier.Tier.Alternator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 public class AlternatorBlock extends DirectionalKineticBlock implements IBE<AlternatorBlockEntity>, IRotate, com.simibubi.create.content.equipment.wrench.IWrenchable, voltaic.prefab.tile.IWrenchable {
-    private final AlternatorTier tier;
+    private final Tier.Alternator tier;
 
     private final Supplier<BlockEntityType<AlternatorBlockEntity>> blockEntityType;
 
-    public AlternatorTier getTier() {
+    public Tier.Alternator getTier() {
         return tier;
     }
 
-    public AlternatorBlock(Properties properties, AlternatorTier tier, Supplier<BlockEntityType<AlternatorBlockEntity>> blockEntityType) {
+    public AlternatorBlock(Properties properties, Tier.Alternator tier, Supplier<BlockEntityType<AlternatorBlockEntity>> blockEntityType) {
         super(properties);
         this.tier = tier;
         this.blockEntityType = blockEntityType;
@@ -83,6 +93,15 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
     }
 
     @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof AlternatorBlockEntity alternator
+                && alternator.hasStatorUpgrade()) {
+            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), alternator.removeStatorUpgrade());
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         BlockEntity blockEntity = state.hasBlockEntity() ? worldIn.getBlockEntity(pos) : null;
         if (blockEntity instanceof AlternatorBlockEntity alternator) {
@@ -91,21 +110,48 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
     }
 
     @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+            InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof AlternatorBlockEntity alternator && AlternatorBlockEntity.isStatorUpgrade(stack)) {
+            if (alternator.hasStatorUpgrade()) {
+                return ItemInteractionResult.FAIL;
+            }
+            if (!level.isClientSide) {
+                alternator.insertStatorUpgrade(stack);
+                level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (player.isShiftKeyDown() && level.getBlockEntity(pos) instanceof AlternatorBlockEntity alternator && alternator.hasStatorUpgrade()) {
+            if (!level.isClientSide) {
+                ItemStack removed = alternator.removeStatorUpgrade();
+                if (!player.getInventory().add(removed)) {
+                    player.drop(removed, false);
+                }
+                level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
     public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
-        if (world instanceof ServerLevel serverLevel) {
-            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), player);
+        if (level instanceof ServerLevel) {
+            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
             NeoForge.EVENT_BUS.post(event);
             if (event.isCanceled()) {
                 return InteractionResult.SUCCESS;
             } else {
-                if (player != null && !player.isCreative()) {
-                    Block.getDrops(state, serverLevel, pos, world.getBlockEntity(pos), player, context.getItemInHand())
-                            .forEach((itemStack) -> player.getInventory().placeItemBackInInventory(itemStack));
-                }
-                world.destroyBlock(pos, false);
+                level.destroyBlock(pos, true);
                 return InteractionResult.SUCCESS;
             }
         } else {
@@ -119,11 +165,9 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
         if (!level.isClientSide) {
             BlockState state = level.getBlockState(blockPos);
             Direction targetedFace = Direction.UP;
-            if (player.getPickRadius() > 0) {
-                net.minecraft.world.phys.HitResult hitResult = player.pick(player.getPickRadius(), 1.0F, false);
-                if (hitResult instanceof net.minecraft.world.phys.BlockHitResult blockHit) {
-                    targetedFace = blockHit.getDirection();
-                }
+            BlockHitResult hitResult = Item.getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
+            if (hitResult.getType() == HitResult.Type.BLOCK) {
+                targetedFace = hitResult.getDirection();
             }
 
             BlockState rotated = this.getRotatedBlockState(state, targetedFace);
@@ -133,13 +177,17 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
             }
 
             KineticBlockEntity.switchToBlockState(level, blockPos, Block.updateFromNeighbourShapes(rotated, level, blockPos));
+
+            if (level.getBlockEntity(blockPos) instanceof AlternatorBlockEntity alternator) {
+                alternator.updateCache();
+            }
         }
     }
 
     @Override
-    public void onPickup(ItemStack itemStack, BlockPos blockPos, Player player) {
+    public void onPickup(ItemStack stack, BlockPos blockPos, Player player) {
         Level level = player.level();
-        if (level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel) {
             BlockState state = level.getBlockState(blockPos);
 
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, blockPos, state, player);
@@ -147,13 +195,7 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
             if (event.isCanceled()) {
                 return;
             }
-
-            if (player != null && !player.isCreative()) {
-                Block.getDrops(state, serverLevel, blockPos, level.getBlockEntity(blockPos), player, itemStack)
-                        .forEach((drop) -> player.getInventory().placeItemBackInInventory(drop));
-            }
-
-            level.destroyBlock(blockPos, false, player);
+            level.destroyBlock(blockPos, true, player);
         }
     }
 }

@@ -1,5 +1,6 @@
 package io.github.kobaltromero.wattz;
 
+import io.github.kobaltromero.wattz.tier.Tier;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -16,8 +17,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-
-import io.github.kobaltromero.wattz.tier.AlternatorTier;
 import io.github.kobaltromero.wattz.registry.WattzBE;
 import io.github.kobaltromero.wattz.registry.WattzBlocks;
 import io.github.kobaltromero.wattz.registry.WattzItems;
@@ -40,7 +39,7 @@ public class Wattz {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        for (AlternatorTier tier : AlternatorTier.ALL) {
+        for (Tier.Alternator tier : Tier.Alternator.ALL) {
             Block block = WattzBlocks.getAlternator(tier.id()).get();
             BlockStressValues.IMPACTS.register(block, () -> tier.getMaxStress() / 256.0);
 
@@ -55,7 +54,7 @@ public class Wattz {
 
     private void addCreativeTabItems(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            for (AlternatorTier tier : AlternatorTier.ALL) {
+            for (Tier.Alternator tier : Tier.Alternator.ALL) {
                 event.accept(WattzItems.getAlternator(tier.id()));
             }
         }

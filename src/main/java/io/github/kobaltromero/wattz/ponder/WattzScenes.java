@@ -55,6 +55,12 @@ public class WattzScenes {
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(generator));
         scene.idle(60);
+        scene.overlay()
+                .showText(50)
+                .text("wattz.ponder.alternator.text_5")
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(generator));
+        scene.idle(60);
         scene.markAsFinished();
     }
 }
