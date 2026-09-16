@@ -15,6 +15,8 @@ public class WattzPonder implements PonderPlugin {
 
     @Override
     public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+        helper.addStoryBoard(ResourceLocation.parse("wattz:alternator/crude"), "alternator", WattzScenes::alternator,
+                AllCreatePonderTags.KINETIC_APPLIANCES);
         helper.addStoryBoard(ResourceLocation.parse("wattz:alternator/mk1"), "alternator", WattzScenes::alternator,
                 AllCreatePonderTags.KINETIC_APPLIANCES);
         helper.addStoryBoard(ResourceLocation.parse("wattz:alternator/mk2"), "alternator", WattzScenes::alternator,
@@ -29,6 +31,7 @@ public class WattzPonder implements PonderPlugin {
 
     @Override
     public void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
+        helper.addToTag(AllCreatePonderTags.KINETIC_APPLIANCES).add(ResourceLocation.parse("wattz:alternator/crude"));
         helper.addToTag(AllCreatePonderTags.KINETIC_APPLIANCES).add(ResourceLocation.parse("wattz:alternator/mk1"));
         helper.addToTag(AllCreatePonderTags.KINETIC_APPLIANCES).add(ResourceLocation.parse("wattz:alternator/mk2"));
         helper.addToTag(AllCreatePonderTags.KINETIC_APPLIANCES).add(ResourceLocation.parse("wattz:alternator/mk3"));

@@ -1,9 +1,22 @@
 {
   "values": [
+    "wattz:alternator/crude",
     "wattz:alternator/mk1",
     "wattz:alternator/mk2",
     "wattz:alternator/mk3",
     "wattz:alternator/mk4",
-    "wattz:alternator/mk5"
+    "wattz:alternator/mk5",
+    "wattz:alternator/crude/encased/andesite",
+    "wattz:alternator/mk1/encased/andesite",
+    "wattz:alternator/mk2/encased/andesite",
+    "wattz:alternator/mk3/encased/andesite",
+    "wattz:alternator/mk4/encased/andesite",
+    "wattz:alternator/mk5/encased/andesite",
+    "wattz:alternator/crude/encased/brass",
+    "wattz:alternator/mk1/encased/brass",
+    "wattz:alternator/mk2/encased/brass",
+    "wattz:alternator/mk3/encased/brass",
+    "wattz:alternator/mk4/encased/brass",
+    "wattz:alternator/mk5/encased/brass"
   ]
 }

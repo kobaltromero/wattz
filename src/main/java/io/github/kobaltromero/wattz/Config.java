@@ -12,9 +12,8 @@ public class Config {
     static {
         BUILDER.push("general");
         STATOR_BONUS = BUILDER
-                .defineInRange("stator_bonus", 0.1, 0.0, 1.0);
+                .defineInRange("stator_bonus", 0.125, 0.0, 1.0);
         BUILDER.pop();
-
         BUILDER.push("alternator");
     }
 
@@ -23,9 +22,19 @@ public class Config {
     private static final Map<String, TierValues> TIERS = new LinkedHashMap<>();
 
     private static final ModConfigSpec.DoubleValue STATOR_BONUS;
+    private static final ModConfigSpec.DoubleValue MAX_STRESS;
+    private static final ModConfigSpec.DoubleValue MAX_FE_PER_TICK;
 
     static {
-        for (TierData def : TierData.DEFAULTS) {
+
+        BUILDER.push("crude");
+        MAX_STRESS = BUILDER
+                .defineInRange("stress_max", 2048, 0.0, Double.MAX_VALUE);
+        MAX_FE_PER_TICK = BUILDER
+                .defineInRange("max_fe_per_tick", 3.0, 0.0, Double.MAX_VALUE);
+        BUILDER.pop();
+
+        for (TierData.Alternator def : TierData.Alternator.DEFAULTS) {
             BUILDER.push(def.id());
             ModConfigSpec.DoubleValue maxStress = BUILDER
                     .defineInRange("stress_max", def.defaultMaxStress(), 0.0, Double.MAX_VALUE);
@@ -45,6 +54,14 @@ public class Config {
 
     public static double statorBonus() {
         return STATOR_BONUS.get();
+    }
+
+    public static double crudeMaxStress() {
+        return MAX_STRESS.get();
+    }
+
+    public static double crudeMaxFE() {
+        return MAX_FE_PER_TICK.get();
     }
 
     public static final ModConfigSpec SPEC = BUILDER.build();

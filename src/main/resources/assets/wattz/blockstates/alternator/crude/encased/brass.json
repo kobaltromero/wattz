@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "wattz:block/alternator/encased/brass/block_vertical",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "wattz:block/alternator/encased/brass/block",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "wattz:block/alternator/encased/brass/block",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "wattz:block/alternator/encased/brass/block"
+    },
+    "facing=up": {
+      "model": "wattz:block/alternator/encased/brass/block_vertical"
+    },
+    "facing=west": {
+      "model": "wattz:block/alternator/encased/brass/block",
+      "y": 90
+    }
+  }
+}

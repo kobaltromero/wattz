@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "electrodynamics"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "dynamicelectricity"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "012"
+  ],
+  "key": {
+    "0": { "tag": "c:gears/steel" },
+    "1": { "item": "electrodynamics:laminatedcoil" },
+    "2": { "tag": "c:plates/titanium" },
+    "3": { "item": "create:shaft" },
+    "4": { "item": "wattz:alternator/mk4" },
+    "5": { "tag": "c:circuits/ultimate"}
+  },
+  "result": {
+    "id": "wattz:alternator/mk5",
+    "count": 1
+  }
+}

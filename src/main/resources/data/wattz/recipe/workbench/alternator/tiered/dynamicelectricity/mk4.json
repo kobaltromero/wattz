@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dynamicelectricity"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "062"
+  ],
+  "key": {
+    "0": { "tag": "c:gears/bronze" },
+    "1": { "item": "dynamicelectricity:alternator" },
+    "2": { "tag": "c:ingots/titanium" },
+    "3": { "item": "dynamicelectricity:shaftstainlesssteel" },
+    "4": { "item": "wattz:alternator/mk3" },
+    "5": { "tag": "c:circuits/elite"},
+    "6": { "item": "dynamicelectricity:stator" }
+  },
+  "result": {
+    "id": "wattz:alternator/mk4",
+    "count": 1
+  }
+}

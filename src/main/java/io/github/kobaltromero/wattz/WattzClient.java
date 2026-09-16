@@ -1,5 +1,9 @@
 package io.github.kobaltromero.wattz;
 
+import io.github.kobaltromero.wattz.content.alternator.crude.BEAlternatorCrude;
+import io.github.kobaltromero.wattz.content.alternator.crude.RendererAlternatorCrude;
+import io.github.kobaltromero.wattz.content.alternator.crude.VisualAlternatorCrude;
+import io.github.kobaltromero.wattz.content.alternator.tiered.BEAlternator;
 import io.github.kobaltromero.wattz.tier.Tier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
@@ -15,9 +19,8 @@ import dev.engine_room.flywheel.api.visualization.VisualizerRegistry;
 import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
 import net.createmod.ponder.foundation.PonderIndex;
 
-import io.github.kobaltromero.wattz.content.alternator.AlternatorBlockEntity;
-import io.github.kobaltromero.wattz.content.alternator.AlternatorRenderer;
-import io.github.kobaltromero.wattz.content.alternator.AlternatorVisual;
+import io.github.kobaltromero.wattz.content.alternator.tiered.RendererAlternator;
+import io.github.kobaltromero.wattz.content.alternator.tiered.VisualAlternator;
 import io.github.kobaltromero.wattz.ponder.WattzPonder;
 import io.github.kobaltromero.wattz.registry.WattzBE;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
@@ -33,15 +36,24 @@ public class WattzClient {
 
     private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         for (Tier.Alternator tier : Tier.Alternator.ALL) {
-            BlockEntityType<AlternatorBlockEntity> type = WattzBE.getAlternator(tier.id()).get();
+            BlockEntityType<BEAlternator> type = WattzBE.getAlternator(tier.id()).get();
 
-            event.registerBlockEntityRenderer(type, AlternatorRenderer::new);
+            event.registerBlockEntityRenderer(type, RendererAlternator::new);
 
             VisualizerRegistry.setVisualizer(type,
                     new SimpleBlockEntityVisualizer.Builder<>(type)
-                            .factory(AlternatorVisual::new)
+                            .factory(VisualAlternator::new)
                             .apply());
         }
+
+        BlockEntityType<BEAlternatorCrude> crudeType = WattzBE.CRUDE_ALTERNATOR.get();
+
+        event.registerBlockEntityRenderer(crudeType, RendererAlternatorCrude::new);
+
+        VisualizerRegistry.setVisualizer(crudeType,
+                new SimpleBlockEntityVisualizer.Builder<>(crudeType)
+                        .factory(VisualAlternatorCrude::new)
+                        .apply());
     }
 
     @SubscribeEvent

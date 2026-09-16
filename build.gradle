@@ -35,7 +35,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id + "-neoforge"
+    archivesName = mod_id + "-neoforge-" + minecraft_version
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -92,7 +92,7 @@ dependencies {
     implementation "maven.modrinth:kzF5itx6:irV2pd3V"
     implementation "maven.modrinth:xmhmr70o:81LJg5IE"
     implementation "maven.modrinth:LNytGWDc:UjX6dr61"
-    // implementation "maven.modrinth:gYqTAyBw:RERuOOaQ"
+    implementation "maven.modrinth:gYqTAyBw:RERuOOaQ"
 
     implementation("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}")
     compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")

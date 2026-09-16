@@ -1,5 +1,14 @@
 # Changelog
 
+### 0.1.0-beta.3 - September 16, 2026
+
+- Added Crude Alternator which produces a flat 60 FE/s by default. -kobaltromero
+- Improved Alternator Models. -kobaltromero
+- Added tier to Alternator's tooltip dropping the "Mk" naming scheme. -kobaltromero
+- New Recipes for each Alternator. -kobaltromero
+- Alternators can now be 'encased' with either Andesite Casings or Brass Casings. (Will polish the models next update.) -kobaltromero
+- Stator upgrades now increase amperage by 12.5% by default. -kobaltromero
+
 ### 0.1.0-beta.2 - September 14th, 2026
 - Renamed AlternatorTier record to Tier.Alternator in preparation for addition of other contraptions. -kobaltromero
 - Fixed Voltaic's wrench not allowing rotation on all available axis like Create's wrench does. -kobaltromero
