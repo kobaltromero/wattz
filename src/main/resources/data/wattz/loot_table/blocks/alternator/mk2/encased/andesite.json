@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "wattz:alternator/mk2/encased/andesite"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "wattz:alternator/mk2/encased/andesite"
+}
