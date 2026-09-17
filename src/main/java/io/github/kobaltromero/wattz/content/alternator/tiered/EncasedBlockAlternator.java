@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -196,16 +197,29 @@ public class EncasedBlockAlternator extends DirectionalKineticBlock implements I
 
     @Override
     public void onPickup(ItemStack stack, BlockPos blockPos, Player player) {
-        Level level = player.level();
-        if (level instanceof ServerLevel) {
-            BlockState state = level.getBlockState(blockPos);
+        BlockHitResult result = new BlockHitResult(
+                Vec3.atCenterOf(blockPos),
+                player.getDirection().getOpposite(),
+                blockPos,
+                false
+        );
 
-            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, blockPos, state, player);
-            NeoForge.EVENT_BUS.post(event);
-            if (event.isCanceled()) {
-                return;
-            }
-            level.destroyBlock(blockPos, true, player);
+        UseOnContext context = new UseOnContext(player, InteractionHand.MAIN_HAND, result);
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+
+        BlockState state = level.getBlockState(pos);
+
+        ItemStack preservedUpgrade = level.getBlockEntity(pos) instanceof BEAlternator existing
+                ? existing.getStatorUpgrade().copy()
+                : ItemStack.EMPTY;
+
+        level.levelEvent(2001, pos, Block.getId(state));
+        KineticBlockEntity.switchToBlockState(level, pos,
+                alternator.get().defaultBlockState().setValue(FACING, state.getValue(FACING)));
+
+        if (!preservedUpgrade.isEmpty() && level.getBlockEntity(pos) instanceof BEAlternator updated) {
+            updated.insertStatorUpgrade(preservedUpgrade);
         }
     }
 

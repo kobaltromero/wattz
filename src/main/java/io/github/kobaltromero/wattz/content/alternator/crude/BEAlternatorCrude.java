@@ -30,7 +30,7 @@ public class BEAlternatorCrude extends KineticBlockEntity implements IEnergyStor
     }
 
     public double getProductionRate() {
-        return Config.crudeMaxFE() * getRpmFraction();
+        return Config.getFePerTick() * getRpmFraction();
     }
 
     public double getProducedPerSecond() {
@@ -76,7 +76,7 @@ public class BEAlternatorCrude extends KineticBlockEntity implements IEnergyStor
 
     @Override
     public float calculateStressApplied() {
-        double maxStress = Config.crudeMaxStress();
+        double maxStress = Config.getMaxStress();
         double scaledImpact = maxStress / 256.0;
 
         double speed = Math.abs(getSpeed());

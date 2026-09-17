@@ -5,7 +5,8 @@
 	"render_type" : "minecraft:cutout_mipped",
 	"texture_size": [32, 36],
 	"textures": {
-		"0": "wattz:block/alternator/base"
+		"0": "wattz:block/alternator/crude/base",
+		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [
 		{

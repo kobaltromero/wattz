@@ -97,7 +97,7 @@ public class BEAlternator extends KineticBlockEntity implements ICapabilityElect
     }
 
     public double getAmperageMultiplier() {
-        return hasStatorUpgrade() ? 1.0 + Config.statorBonus() : 1.0;
+        return hasStatorUpgrade() ? 1.0 + Config.getStatorBonus() : 1.0;
     }
 
     public void insertStatorUpgrade(ItemStack stack) {

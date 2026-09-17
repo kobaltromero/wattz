@@ -47,6 +47,8 @@ authors="kobaltromero"
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Bringing Electrodynamics to Create since 2026.
+
+The mod adds alternators & motors(soon) that convert between Create's RPM and FE/Voltaic's electricity. The mod is intended to be used alongside Electrodynamics and other projects that use Voltaic's electricity.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

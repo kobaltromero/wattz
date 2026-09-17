@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -28,11 +27,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.level.BlockEvent;
 
 public class EncasedBlockAlternatorCrude extends DirectionalKineticBlock implements IBE<BEAlternatorCrude>, IRotate,
         com.simibubi.create.content.equipment.wrench.IWrenchable, voltaic.prefab.tile.IWrenchable, EncasedBlock {
@@ -135,17 +133,22 @@ public class EncasedBlockAlternatorCrude extends DirectionalKineticBlock impleme
 
     @Override
     public void onPickup(ItemStack stack, BlockPos blockPos, Player player) {
-        Level level = player.level();
-        if (level instanceof ServerLevel) {
-            BlockState state = level.getBlockState(blockPos);
+        BlockHitResult result = new BlockHitResult(
+                Vec3.atCenterOf(blockPos),
+                player.getDirection().getOpposite(),
+                blockPos,
+                false
+        );
 
-            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, blockPos, state, player);
-            NeoForge.EVENT_BUS.post(event);
-            if (event.isCanceled()) {
-                return;
-            }
-            level.destroyBlock(blockPos, true, player);
-        }
+        UseOnContext context = new UseOnContext(player, InteractionHand.MAIN_HAND, result);
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+
+        BlockState state = level.getBlockState(pos);
+
+        level.levelEvent(2001, pos, Block.getId(state));
+        KineticBlockEntity.switchToBlockState(level, pos,
+                alternator.get().defaultBlockState().setValue(FACING, state.getValue(FACING)));
     }
 
     @Override

@@ -29,7 +29,8 @@ public class WattzBE {
                     .of((pos, state) -> new BEAlternatorCrude(getCrudeAlternator().get(), pos, state),
                             WattzBlocks.CRUDE_ALTERNATOR.get(),
                             WattzBlocks.getCrudeAlternatorEncased(WattzBlocks.CasingType.ANDESITE).get(),
-                            WattzBlocks.getCrudeAlternatorEncased(WattzBlocks.CasingType.BRASS).get())
+                            WattzBlocks.getCrudeAlternatorEncased(WattzBlocks.CasingType.BRASS).get(),
+                            WattzBlocks.getCrudeAlternatorEncased(WattzBlocks.CasingType.COPPER).get())
                     .build(null));
 
     public static DeferredHolder<BlockEntityType<?>, BlockEntityType<BEAlternatorCrude>> getCrudeAlternator() {
@@ -42,7 +43,9 @@ public class WattzBE {
                     .of((pos, state) -> new BEAlternator(getAlternator(tier.id()).get(), pos, state, tier),
                             WattzBlocks.getAlternator(tier.id()).get(),
                             WattzBlocks.getAlternatorEncased(tier.id(), WattzBlocks.CasingType.ANDESITE).get(),
-                            WattzBlocks.getAlternatorEncased(tier.id(), WattzBlocks.CasingType.BRASS).get())
+                            WattzBlocks.getAlternatorEncased(tier.id(), WattzBlocks.CasingType.BRASS).get(),
+                            WattzBlocks.getAlternatorEncased(tier.id(), WattzBlocks.CasingType.COPPER).get()
+                            )
                     .build(null)));
         }
     }

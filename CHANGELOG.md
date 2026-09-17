@@ -1,6 +1,21 @@
 # Changelog
 
-### 0.1.0-beta.3 - September 16, 2026
+### 0.1.0-beta.4 - September 17th, 2026
+
+**There should be one more beta after this provided everything goes well. I spent a lot of time polishing this update.**
+
+- Finished encased alternator models. -kobaltromero
+- Added copper casing type to encased variants. -kobaltromero
+- Fixed missing alternator Recipes when Dynamic Electricity isn't installed. -kobaltromero
+- Fixed casing removal behavior. Now casings can be removed with either Electrodynamic's or Create's wrench properly. -kobaltromero
+- Added proper creative tabs. -kobaltromero
+- Removed entries from "Functional Blocks" creative tab. -kobaltromero
+- Fixed loot table entries. -kobaltromero
+- Fixed configuration language file entries. -kobaltromero
+- Added config entry to disable recipes for each item. -kobaltromero
+- Changed Crude Alternator's output port color to distinguish it from the tiered ones. -kobaltromero
+
+### 0.1.0-beta.3 - September 16th, 2026
 
 - Added Crude Alternator which produces a flat 60 FE/s by default. -kobaltromero
 - Improved Alternator Models. -kobaltromero

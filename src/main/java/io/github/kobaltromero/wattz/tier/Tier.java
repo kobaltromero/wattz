@@ -37,15 +37,15 @@ public class Tier {
         }
 
         public double getVoltage() {
-            return Config.alternatorTier(id).voltage().get();
+            return Config.getAlternatorTier(id).voltage().get();
         }
 
         public double getAmperage() {
-            return Config.alternatorTier(id).amperage().get();
+            return Config.getAlternatorTier(id).amperage().get();
         }
 
         public double getMaxStress() {
-            return Config.alternatorTier(id).maxStress().get();
+            return Config.getAlternatorTier(id).maxStress().get();
         }
     }
 }

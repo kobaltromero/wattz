@@ -5,11 +5,20 @@
       "modid": "electrodynamics"
     },
     {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:mod_loaded",
-        "modid": "dynamicelectricity"
-      }
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "wattz:recipe_enabled",
+          "tier": "mk5"
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:mod_loaded",
+            "modid": "dynamicelectricity"
+          }
+        }
+      ]
     }
   ],
   "type": "minecraft:crafting_shaped",

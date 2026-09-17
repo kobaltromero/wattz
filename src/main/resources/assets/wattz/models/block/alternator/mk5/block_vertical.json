@@ -6,7 +6,8 @@
 	"texture_size": [32, 36],
 	"textures": {
 		"0": "wattz:block/alternator/base",
-		"2": "wattz:block/alternator/mk5"
+		"2": "wattz:block/alternator/mk5",
+		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [
 		{

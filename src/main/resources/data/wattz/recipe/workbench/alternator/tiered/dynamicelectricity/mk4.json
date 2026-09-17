@@ -1,8 +1,17 @@
 {
   "neoforge:conditions": [
     {
-      "type": "neoforge:mod_loaded",
-      "modid": "dynamicelectricity"
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "wattz:recipe_enabled",
+          "tier": "mk4"
+        },
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "dynamicelectricity"
+        }
+      ]
     }
   ],
   "type": "minecraft:crafting_shaped",

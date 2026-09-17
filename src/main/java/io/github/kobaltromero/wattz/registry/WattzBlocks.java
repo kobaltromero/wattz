@@ -24,6 +24,7 @@ public class WattzBlocks {
 
     public enum CasingType {
         ANDESITE("andesite", AllBlocks.ANDESITE_CASING::get),
+        COPPER("copper", AllBlocks.COPPER_CASING::get),
         BRASS("brass", AllBlocks.BRASS_CASING::get);
 
         public final String id;
@@ -35,8 +36,8 @@ public class WattzBlocks {
         }
     }
 
-    private static final Map<String, DeferredBlock<BlockAlternator>> KINETIC_GENERATORS = new LinkedHashMap<>();
-    private static final Map<String, DeferredBlock<EncasedBlockAlternator>> KINETIC_GENERATORS_ENCASED = new LinkedHashMap<>();
+    private static final Map<String, DeferredBlock<BlockAlternator>> ALTERNATORS = new LinkedHashMap<>();
+    private static final Map<String, DeferredBlock<EncasedBlockAlternator>> ALTERNATORS_ENCASED = new LinkedHashMap<>();
     private static final Map<String, DeferredBlock<EncasedBlockAlternatorCrude>> CRUDE_ALTERNATOR_ENCASED = new LinkedHashMap<>();
 
     public static final DeferredBlock<BlockAlternatorCrude> CRUDE_ALTERNATOR = BLOCKS.registerBlock(
@@ -46,7 +47,7 @@ public class WattzBlocks {
 
     static {
         for (Tier.Alternator tier : Tier.Alternator.ALL) {
-            KINETIC_GENERATORS.put(tier.id(), BLOCKS.registerBlock(
+            ALTERNATORS.put(tier.id(), BLOCKS.registerBlock(
                     tier.registryName(),
                     props -> new BlockAlternator(props, tier, () -> WattzBE.getAlternator(tier.id()).get()),
                     BlockBehaviour.Properties.ofFullCopy(SharedProperties.softMetal()).requiresCorrectToolForDrops()));
@@ -54,7 +55,7 @@ public class WattzBlocks {
 
         for (CasingType casing : CasingType.values()) {
             for (Tier.Alternator tier : Tier.Alternator.ALL) {
-                KINETIC_GENERATORS_ENCASED.put(encasedKey(tier.id(), casing), BLOCKS.registerBlock(
+                ALTERNATORS_ENCASED.put(encasedKey(tier.id(), casing), BLOCKS.registerBlock(
                         tier.registryName() + "/encased/" + casing.id,
                         props -> new EncasedBlockAlternator(props, tier, () -> WattzBE.getAlternator(tier.id()).get(),
                                 casing.block, () -> WattzBlocks.getAlternator(tier.id()).get()),
@@ -70,11 +71,11 @@ public class WattzBlocks {
     }
 
     public static DeferredBlock<BlockAlternator> getAlternator(String tierId) {
-        return KINETIC_GENERATORS.get(tierId);
+        return ALTERNATORS.get(tierId);
     }
 
     public static DeferredBlock<EncasedBlockAlternator> getAlternatorEncased(String tierId, CasingType type) {
-        return KINETIC_GENERATORS_ENCASED.get(encasedKey(tierId, type));
+        return ALTERNATORS_ENCASED.get(encasedKey(tierId, type));
     }
 
     private static String encasedKey(String tierId, CasingType type) {
